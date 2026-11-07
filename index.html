@@ -5,30 +5,61 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#1b1640">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RacePlanet">
 <meta name="mobile-web-app-capable" content="yes">
-<title>Knalkarts</title>
+<title>RacePlanet</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap">
 <link rel="stylesheet" href="style.css">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }</script>
+<script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }</script>
 </head>
 <body>
 <canvas id="c"></canvas>
 
 <div id="menu" class="screen">
   <div class="card">
-    <h1>KNAL<span>KARTS</span></h1>
+    <h1>RACE<span>PLANET</span></h1>
     <p class="sub">Race tegen je vrienden, gewoon op je telefoon</p>
     <input id="name" maxlength="12" placeholder="Jouw naam" autocomplete="off">
     <div id="colors"></div>
+    <div id="ccSel" class="seg" role="group" aria-label="Snelheidsklasse">
+      <button data-cc="100">100cc</button><button data-cc="150">150cc</button><button data-cc="200">200cc</button>
+    </div>
     <button id="btnHost" class="big">🏁 Nieuwe race maken</button>
     <div class="row">
       <input id="code" maxlength="4" placeholder="CODE" autocomplete="off" autocapitalize="characters">
       <button id="btnJoin" class="mid">Meedoen</button>
     </div>
     <button id="btnSolo" class="ghost">Alleen oefenen tegen de computer</button>
+    <button id="btnFull" class="ghost hidden">⛶ Volledig scherm</button>
     <p id="menuMsg" class="msg"></p>
+  </div>
+</div>
+
+<div id="install" class="screen hidden">
+  <div class="card">
+    <h2>Volledig scherm</h2>
+    <div id="installIos" class="steps">
+      <p>Op een iPhone kan dat alleen als je RacePlanet op je beginscherm zet:</p>
+      <ol>
+        <li>Tik onderin Safari op <b>Deel</b> <span class="ico">⬆︎</span></li>
+        <li>Kies <b>Zet op beginscherm</b></li>
+        <li>Open RacePlanet voortaan via het nieuwe icoon: zonder zoekbalk</li>
+      </ol>
+    </div>
+    <div id="installAndroid" class="steps hidden">
+      <p>Wil je ook geen zoekbalk meer zien als je het spel opent? Zet RacePlanet op je startscherm:</p>
+      <ol>
+        <li>Tik rechtsboven op <b>⋮</b></li>
+        <li>Kies <b>App installeren</b> of <b>Toevoegen aan startscherm</b></li>
+      </ol>
+    </div>
+    <button id="btnInstallOk" class="big">Oké</button>
   </div>
 </div>
 
@@ -38,10 +69,14 @@
     <div id="roomCode" class="code">----</div>
     <button id="btnShare" class="ghost">📤 Stuur de link naar je vrienden</button>
     <ul id="players"></ul>
+    <p id="raceInfo" class="sub"></p>
     <div id="hostOpts">
       <div class="row opts">
         <label>Rondes
           <select id="laps"><option>1</option><option>2</option><option selected>3</option><option>5</option></select>
+        </label>
+        <label>Klasse
+          <select id="cc"><option value="100">100cc</option><option value="150" selected>150cc</option><option value="200">200cc</option></select>
         </label>
         <label><input type="checkbox" id="fillBots" checked> Computer-racers erbij</label>
       </div>
@@ -79,6 +114,17 @@
     <button id="btnMenu" class="ghost">Terug naar menu</button>
   </div>
 </div>
+
+<div id="pause" class="screen hidden">
+  <div class="card">
+    <h2>Pauze</h2>
+    <p id="pauseMsg" class="msg"></p>
+    <button id="btnResume" class="big">Verder racen</button>
+    <button id="btnQuit" class="ghost">Stoppen en terug naar menu</button>
+    <p id="pauseHint" class="hint">Esc = verder racen</p>
+  </div>
+</div>
+<button id="btnPause" aria-label="Pauze">⏸</button>
 
 <div id="rotate">Draai je telefoon dwars voor meer overzicht ↻</div>
 <button id="mute" aria-label="Geluid aan/uit">🔊</button>

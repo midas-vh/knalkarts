@@ -50,6 +50,15 @@ button.ghost { background: rgba(255, 255, 255, .1); padding: 10px; font-size: 15
 #colors { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
 .sw { width: 36px; height: 36px; border-radius: 50%; border: 3px solid transparent; box-shadow: 0 3px 0 rgba(0, 0, 0, .35); }
 .sw.sel { border-color: #fff; transform: scale(1.12); }
+.steps p { margin: 0 0 6px; font-size: 15px; line-height: 1.35; }
+.steps ol { margin: 0; padding-left: 22px; font-size: 15px; line-height: 1.5; }
+.steps .ico { display: inline-block; padding: 0 5px; border: 1px solid rgba(255, 255, 255, .5); border-radius: 5px; font-size: 12px; }
+.seg { display: flex; gap: 6px; }
+.seg button {
+  flex: 1; padding: 9px 4px; font-size: 16px; font-weight: 800; background: rgba(255, 255, 255, .1);
+  border: 2px solid transparent;
+}
+.seg button.sel { background: #2a9df4; border-color: #fff; box-shadow: 0 3px 0 #1e5f99; }
 .code { text-align: center; font-size: 60px; line-height: 1; color: #ffd23f; letter-spacing: 10px; text-shadow: 0 4px 0 #c2410c; }
 #players, #resList { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 #players li, #resList li {
@@ -127,3 +136,9 @@ button.ghost { background: rgba(255, 255, 255, .1); padding: 10px; font-size: 15
   width: 44px; height: 44px; border-radius: 50%; background: rgba(0, 0, 0, .35); font-size: 20px;
 }
 body.racing #mute { display: none; }
+#btnPause {
+  display: none; position: fixed; right: calc(14px + env(safe-area-inset-right)); top: calc(140px + env(safe-area-inset-top));
+  width: 44px; height: 44px; border-radius: 50%; background: rgba(0, 0, 0, .35); font-size: 18px; padding: 0;
+}
+body.racing #btnPause { display: block; }
+@media (max-height: 420px) { #btnPause { top: calc(114px + env(safe-area-inset-top)); } }

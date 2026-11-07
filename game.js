@@ -33,8 +33,21 @@ const sun = new THREE.DirectionalLight(0xd8deff, 1.3);
 sun.position.set(-120, 200, 80);
 scene.add(sun);
 let baseFov = 70;
+// Op een staande telefoon tekenen we alles een kwartslag gedraaid (body.rot): je speelt altijd dwars,
+// ook met de schermrotatie vergrendeld. W x H is dan het 'liggende' formaat.
+const isTouchDev = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+function layout() {
+  const rot = isTouchDev && innerHeight > innerWidth;
+  const W = rot ? innerHeight : innerWidth, H = rot ? innerWidth : innerHeight;
+  const b = document.body, st = document.documentElement.style;
+  b.classList.toggle('rot', rot);
+  st.setProperty('--W', W + 'px'); st.setProperty('--H', H + 'px');
+  b.classList.toggle('narrow', W <= 520);
+  b.classList.toggle('short', H <= 420);
+  return { W, H };
+}
 function resize() {
-  const w = innerWidth, h = innerHeight;
+  const { W: w, H: h } = layout();
   renderer.setSize(w, h, false);
   camera.aspect = w / h;
   baseFov = w < h ? 88 : 70;
@@ -42,6 +55,7 @@ function resize() {
   camera.updateProjectionMatrix();
 }
 addEventListener('resize', resize);
+addEventListener('orientationchange', () => setTimeout(resize, 250)); // iOS meldt de nieuwe maat soms later
 resize();
 
 const track = await Track.load(scene);
@@ -105,9 +119,12 @@ function readInput() {
   let pid = null;
   const set = (e) => {
     const r = pad.getBoundingClientRect();
-    const s = clamp((e.clientX - (r.left + r.width / 2)) / (r.width / 2) * 1.3, -1, 1);
+    // gedraaid getekend: de schuifbalk loopt dan van boven naar beneden over het echte scherm
+    const rot = document.body.classList.contains('rot');
+    const len = rot ? r.height : r.width, pos = rot ? e.clientY - r.top : e.clientX - r.left;
+    const s = clamp((pos - len / 2) / (len / 2) * 1.3, -1, 1);
     inp.steer = s;
-    knob.style.transform = `translateX(${s * (r.width / 2 - 36)}px)`;
+    knob.style.transform = `translateX(${s * (len / 2 - 36)}px)`;
   };
   pad.addEventListener('pointerdown', (e) => {
     e.preventDefault(); pid = e.pointerId;

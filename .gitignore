@@ -1,2 +1,21 @@
 # Blender-reservekopieën
 *.blend1
+
+# --- Geheimen: nooit committen ---
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+*.keystore
+*.jks
+id_rsa*
+id_ed25519*
+credentials.json
+secrets.*
+service-account*.json
+.npmrc
+.netrc
+.claude/settings.local.json
